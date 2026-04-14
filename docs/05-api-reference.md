@@ -1,5 +1,12 @@
 # 05 - API Reference
 
+Este documento se enfoca en la API HTTP del backend normal (`backend/`).
+
+Para API/Socket del módulo multijugador revisa:
+
+1. [06-multijugador.md](06-multijugador.md)
+2. [07-deploy-cloudflare.md](07-deploy-cloudflare.md)
+
 Base URL local:
 
 - http://localhost:3001

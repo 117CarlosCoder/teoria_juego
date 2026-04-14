@@ -1,5 +1,10 @@
 # 01 - Arquitectura General
 
+Nota: este documento describe la arquitectura base (modo normal). Para multiplayer y despliegue publico ver:
+
+1. [06-multijugador.md](06-multijugador.md)
+2. [07-deploy-cloudflare.md](07-deploy-cloudflare.md)
+
 ## Objetivo del sistema
 
 Aplicacion educativa sobre Teoria de Juegos centrada en el Dilema del Prisionero.

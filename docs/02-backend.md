@@ -1,5 +1,12 @@
 # 02 - Backend
 
+Este documento cubre el backend normal (`backend/`).
+
+Para backend de multijugador y modo single URL ver:
+
+1. [06-multijugador.md](06-multijugador.md)
+2. [07-deploy-cloudflare.md](07-deploy-cloudflare.md)
+
 ## Vision general
 
 El backend expone una API REST bajo /api y usa Express + mysql2/promise.

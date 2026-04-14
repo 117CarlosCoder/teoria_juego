@@ -1,5 +1,12 @@
 # 03 - Frontend
 
+Este documento cubre el frontend normal (`frontend/`).
+
+Para frontend de multijugador y su flujo de partida ver:
+
+1. [06-multijugador.md](06-multijugador.md)
+2. [07-deploy-cloudflare.md](07-deploy-cloudflare.md)
+
 ## Vision general
 
 SPA React con 4 vistas conectadas por React Router.

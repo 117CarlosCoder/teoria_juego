@@ -1,5 +1,12 @@
 # 04 - Base de Datos
 
+Este documento describe la base de datos del modo normal (MySQL).
+
+Nota sobre multijugador:
+
+- El módulo de multijugador no depende de esta base de datos para la lógica de partida en tiempo real.
+- Revisa [06-multijugador.md](06-multijugador.md) para arquitectura y estado de juego.
+
 ## Motor y despliegue
 
 MySQL 8 en Docker Compose.
