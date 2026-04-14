@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -15,38 +15,73 @@ import { describeStrategy, getAgentActionWithMeta } from './GameEngine';
 import { useGameState } from './useGameState';
 
 const SPRITES = {
-  player: '/sprites/player-pixel.svg',
-  cpu: '/sprites/cpu-pixel.svg',
   coin: '/sprites/coin-pixel.svg',
   cooperate: '/sprites/cooperate-pixel.svg',
   defect: '/sprites/defect-pixel.svg',
 };
 
-function ResultBanner({ result }) {
-  if (result === 'win') return <p className={styles.win}>Victoria estrategica</p>;
-  if (result === 'lose') return <p className={styles.lose}>Derrota tactica</p>;
-  return <p className={styles.draw}>Empate estrategico</p>;
+function getActionLabel(action) {
+  if (action === 'cooperate') return 'C';
+  if (action === 'defect') return 'D';
+  return '-';
 }
 
-function DecisionBoard() {
+function getAlternativeLabel(label) {
+  if (label === 'C') return 'D';
+  if (label === 'D') return 'C';
+  return '-';
+}
+
+function DecisionBoard({ highlightedCell, pulseTick }) {
+  const outcomeClassName = (cellKey) =>
+    `${styles.outcomeDiamond} ${styles[`outcome${cellKey}`]} ${highlightedCell === cellKey ? styles.outcomeActive : ''}`;
+
   return (
     <div className={styles.decisionBoard}>
       <p className={styles.boardLegend}>Matriz de Pagos</p>
-      <div className={styles.matrixGrid}>
-        <div className={styles.cell}>
-          <span className={styles.cellAction}>C / C</span>
+      <div className={styles.lightTopLeft} aria-hidden="true" />
+      <div className={styles.lightTopRight} aria-hidden="true" />
+      <div className={styles.lightMidLeft} aria-hidden="true" />
+      <div className={styles.lightMidRight} aria-hidden="true" />
+
+      <div className={styles.matrixDiamond}>
+        <div
+          key={`CC-${pulseTick}`}
+          className={outcomeClassName('CC')}
+          aria-label="Resultado C-C: 3 y 3"
+        >
+          <div className={styles.outcomeTopHalf} />
+          <div className={styles.outcomeBottomHalf} />
           <strong>3 | 3</strong>
         </div>
-        <div className={styles.cell}>
-          <span className={styles.cellAction}>C / T</span>
-          <strong>0 | 5</strong>
-        </div>
-        <div className={styles.cell}>
-          <span className={styles.cellAction}>T / C</span>
+
+        <div
+          key={`TC-${pulseTick}`}
+          className={outcomeClassName('TC')}
+          aria-label="Resultado T-C: 5 y 0"
+        >
+          <div className={styles.outcomeTopHalf} />
+          <div className={styles.outcomeBottomHalf} />
           <strong>5 | 0</strong>
         </div>
-        <div className={styles.cell}>
-          <span className={styles.cellAction}>T / T</span>
+
+        <div
+          key={`CT-${pulseTick}`}
+          className={outcomeClassName('CT')}
+          aria-label="Resultado C-T: 0 y 5"
+        >
+          <div className={styles.outcomeTopHalf} />
+          <div className={styles.outcomeBottomHalf} />
+          <strong>0 | 5</strong>
+        </div>
+
+        <div
+          key={`TT-${pulseTick}`}
+          className={outcomeClassName('TT')}
+          aria-label="Resultado T-T: 1 y 1"
+        >
+          <div className={styles.outcomeTopHalf} />
+          <div className={styles.outcomeBottomHalf} />
           <strong>1 | 1</strong>
         </div>
       </div>
@@ -54,20 +89,59 @@ function DecisionBoard() {
   );
 }
 
-function ActorCard({ name, score, badge, side, sprite }) {
+function ActorCard({ name, score, badge, side, actionLabel, secondaryLabel }) {
+  const actionToneClass = (label) => {
+    if (label === 'C') return styles.signCooperate;
+    if (label === 'D') return styles.signDefect;
+    return styles.signIdle;
+  };
+
+  const isDefectSelected = actionLabel === 'D';
+  const topSignLabel = isDefectSelected ? secondaryLabel : actionLabel;
+  const bottomSignLabel = isDefectSelected ? actionLabel : secondaryLabel;
+
+  const topSignTone = actionToneClass(topSignLabel);
+  const bottomSignTone = actionToneClass(bottomSignLabel);
+
+  const sceneOrientation = side === 'player' ? styles.sceneLeft : styles.sceneRight;
+  const scenePose = isDefectSelected ? styles.sceneDefect : styles.sceneCooperate;
+
   return (
     <div className={`${styles.actorCard} ${side === 'player' ? styles.playerSide : styles.agentSide}`}>
-      <div className={styles.actorHead}>
-        <img className={styles.actorSprite} src={sprite} alt={`Sprite de ${name}`} />
-        <div className={styles.actorMeta}>
-          <p className={styles.actorBadge}>{badge}</p>
-          <h3>{name}</h3>
+      <div className={`${styles.actorScene} ${sceneOrientation} ${scenePose}`}>
+        <div className={styles.sceneTopScore}>
+          <img className={styles.coinSprite} src={SPRITES.coin} alt="" aria-hidden="true" />
+          <span>{score}</span>
+        </div>
+
+        <div className={styles.humanoid} aria-hidden="true">
+          <div className={styles.hHead} />
+          <div className={styles.hTorso} />
+          <div className={styles.hArmUp} />
+          <div className={styles.hArmDown} />
+          <div className={styles.hLegLeft} />
+          <div className={styles.hLegRight} />
+        </div>
+
+        <div className={styles.handMountUp} aria-hidden="true">
+          <div className={styles.handTipUp}>
+            <div className={styles.signPoleTop} />
+            <div className={`${styles.actionSign} ${styles.signTop} ${topSignTone}`}>{topSignLabel}</div>
+          </div>
+        </div>
+
+        <div className={styles.handMountDown} aria-hidden="true">
+          <div className={styles.handTipDown}>
+            <div className={styles.signPoleBottom} />
+            <div className={`${styles.actionSign} ${styles.signBottom} ${bottomSignTone}`}>{bottomSignLabel}</div>
+          </div>
         </div>
       </div>
-      <p className={styles.actorScore}>
-        <img className={styles.coinSprite} src={SPRITES.coin} alt="" aria-hidden="true" />
-        Score: {score}
-      </p>
+
+      <div className={styles.actorMeta}>
+        <p className={styles.actorBadge}>{badge}</p>
+        <h3>{name}</h3>
+      </div>
     </div>
   );
 }
@@ -78,6 +152,9 @@ function Game() {
   const [loadingStrategies, setLoadingStrategies] = useState(true);
   const [saveError, setSaveError] = useState('');
   const [saved, setSaved] = useState(false);
+  const [selectedAction, setSelectedAction] = useState('');
+  const [isResolvingRound, setIsResolvingRound] = useState(false);
+  const roundTimeoutRef = useRef(null);
 
   const [form, setForm] = useState({
     playerName: '',
@@ -155,9 +232,45 @@ function Game() {
 
   const lastRound = state.history.length ? state.history[state.history.length - 1] : null;
 
+  const highlightedCell = useMemo(() => {
+    if (!lastRound) return '';
+    const playerChoice = lastRound.player_action === 'cooperate' ? 'C' : 'T';
+    const agentChoice = lastRound.agent_action === 'cooperate' ? 'C' : 'T';
+    return `${playerChoice}${agentChoice}`;
+  }, [lastRound]);
+
+  const playerActionLabel = useMemo(() => {
+    if (isResolvingRound && selectedAction) return getActionLabel(selectedAction);
+    if (lastRound?.player_action) return getActionLabel(lastRound.player_action);
+    return '-';
+  }, [isResolvingRound, selectedAction, lastRound]);
+
+  const playerAlternativeLabel = useMemo(
+    () => getAlternativeLabel(playerActionLabel),
+    [playerActionLabel]
+  );
+
+  const agentActionLabel = useMemo(() => {
+    if (isResolvingRound) return '?';
+    if (lastRound?.agent_action) return getActionLabel(lastRound.agent_action);
+    return '-';
+  }, [isResolvingRound, lastRound]);
+
+  const agentAlternativeLabel = useMemo(
+    () => getAlternativeLabel(agentActionLabel),
+    [agentActionLabel]
+  );
+
   const startGame = () => {
     if (!form.playerName.trim() || !selectedStrategy) return;
     setSaved(false);
+    setSelectedAction('');
+    setIsResolvingRound(false);
+
+    if (roundTimeoutRef.current) {
+      clearTimeout(roundTimeoutRef.current);
+      roundTimeoutRef.current = null;
+    }
 
     dispatch({
       type: 'START',
@@ -172,7 +285,9 @@ function Game() {
   };
 
   const playRound = (playerAction) => {
-    if (!state.strategySlug) return;
+    if (!state.strategySlug || isResolvingRound) return;
+    setSelectedAction(playerAction);
+    setIsResolvingRound(true);
 
     const { action, noiseApplied } = getAgentActionWithMeta(
       state.strategySlug,
@@ -180,19 +295,37 @@ function Game() {
       state.noiseEnabled ? 0.1 : 0
     );
 
-    dispatch({
-      type: 'PLAY_ROUND',
-      payload: {
-        playerAction,
-        agentAction: action,
-        noiseApplied,
-      },
-    });
+    roundTimeoutRef.current = setTimeout(() => {
+      dispatch({
+        type: 'PLAY_ROUND',
+        payload: {
+          playerAction,
+          agentAction: action,
+          noiseApplied,
+        },
+      });
+      setIsResolvingRound(false);
+      roundTimeoutRef.current = null;
+    }, 320);
   };
+
+  useEffect(() => {
+    if (state.screen !== 'playing') {
+      setIsResolvingRound(false);
+    }
+  }, [state.screen]);
+
+  useEffect(() => {
+    return () => {
+      if (roundTimeoutRef.current) {
+        clearTimeout(roundTimeoutRef.current);
+      }
+    };
+  }, []);
 
   if (state.screen === 'config') {
     return (
-      <section className={styles.page}>
+      <section className={`${styles.page} ${styles.pageConfig}`}>
         <header className={styles.hero}>
           <p className={styles.coin}>
             <img className={styles.coinSprite} src={SPRITES.coin} alt="" aria-hidden="true" />
@@ -209,15 +342,17 @@ function Game() {
             score={0}
             badge="TU"
             side="player"
-            sprite={SPRITES.player}
+            actionLabel={playerActionLabel}
+            secondaryLabel={playerAlternativeLabel}
           />
-          <DecisionBoard />
+          <DecisionBoard highlightedCell={highlightedCell} pulseTick={state.currentRound} />
           <ActorCard
             name={selectedStrategy ? selectedStrategy.name : 'Agente'}
             score={0}
             badge="CPU"
             side="agent"
-            sprite={SPRITES.cpu}
+            actionLabel={agentActionLabel}
+            secondaryLabel={agentAlternativeLabel}
           />
         </div>
 
@@ -284,11 +419,12 @@ function Game() {
 
   if (state.screen === 'playing') {
     return (
-      <section className={styles.page}>
+      <section className={`${styles.page} ${styles.pagePlaying}`}>
         <header className={styles.hero}>
           <h1 className={styles.title}>PARTIDA EN CURSO</h1>
           <p className={styles.progress}>Ronda {state.currentRound + 1} de {state.totalRounds}</p>
           <p className={styles.score}>Tu: {state.playerScore} - Agente: {state.agentScore}</p>
+          {isResolvingRound && <p className={styles.lockedLabel}>Resolviendo...</p>}
         </header>
 
         <div className={styles.gameArena}>
@@ -297,15 +433,17 @@ function Game() {
             score={state.playerScore}
             badge="TU"
             side="player"
-            sprite={SPRITES.player}
+            actionLabel={playerActionLabel}
+            secondaryLabel={playerAlternativeLabel}
           />
-          <DecisionBoard />
+          <DecisionBoard highlightedCell={highlightedCell} pulseTick={state.currentRound} />
           <ActorCard
             name={startedStrategy ? startedStrategy.name : 'Agente'}
             score={state.agentScore}
             badge="CPU"
             side="agent"
-            sprite={SPRITES.cpu}
+            actionLabel={agentActionLabel}
+            secondaryLabel={agentAlternativeLabel}
           />
         </div>
 
@@ -321,10 +459,22 @@ function Game() {
         )}
 
         <div className={styles.actions}>
-          <button className={styles.cooperate} onClick={() => playRound('cooperate')} type="button">
+          <button
+            className={`${styles.cooperate} ${selectedAction === 'cooperate' ? styles.selectedCooperate : ''} ${isResolvingRound ? styles.lockedAction : ''}`}
+            onClick={() => playRound('cooperate')}
+            type="button"
+            aria-pressed={selectedAction === 'cooperate'}
+            disabled={isResolvingRound}
+          >
             C · COOPERAR
           </button>
-          <button className={styles.defect} onClick={() => playRound('defect')} type="button">
+          <button
+            className={`${styles.defect} ${selectedAction === 'defect' ? styles.selectedDefect : ''} ${isResolvingRound ? styles.lockedAction : ''}`}
+            onClick={() => playRound('defect')}
+            type="button"
+            aria-pressed={selectedAction === 'defect'}
+            disabled={isResolvingRound}
+          >
             T · TRAICIONAR
           </button>
         </div>
@@ -370,7 +520,7 @@ function Game() {
   }
 
   return (
-    <section className={styles.page}>
+    <section className={`${styles.page} ${styles.pageResult}`}>
       <header className={styles.hero}>
         <h1 className={styles.title}>RESULTADO FINAL</h1>
       </header>
@@ -381,15 +531,17 @@ function Game() {
           score={state.playerScore}
           badge="TU"
           side="player"
-          sprite={SPRITES.player}
+          actionLabel={playerActionLabel}
+          secondaryLabel={playerAlternativeLabel}
         />
-        <ResultBanner result={state.result} />
+        <DecisionBoard highlightedCell={highlightedCell} pulseTick={state.currentRound} />
         <ActorCard
           name={startedStrategy ? startedStrategy.name : 'Agente'}
           score={state.agentScore}
           badge="CPU"
           side="agent"
-          sprite={SPRITES.cpu}
+          actionLabel={agentActionLabel}
+          secondaryLabel={agentAlternativeLabel}
         />
       </div>
       <p>
@@ -397,7 +549,6 @@ function Game() {
       </p>
       <p>{describeStrategy(state.strategySlug)}</p>
       {saveError && <p className={styles.error}>{saveError}</p>}
-      {saved && <p className={styles.saved}>Partida guardada en MySQL.</p>}
 
       <div className={styles.chartWrap}>
         <ResponsiveContainer width="100%" height={280}>
