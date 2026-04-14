@@ -1,0 +1,65 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.chartWrap {
+  background: #ffffff;
+  border: 1px solid #d6d3d1;
+  border-radius: 14px;
+  padding: 0.8rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border: 1px solid #d6d3d1;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #e7e5e4;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.runButton {
+  width: fit-content;
+  border: none;
+  color: white;
+  background: #0369a1;
+  border-radius: 10px;
+  padding: 0.7rem 1.1rem;
+  font-weight: 700;
+}
+
+.explain {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.history {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.history li {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.6rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

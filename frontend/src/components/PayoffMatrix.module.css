@@ -1,0 +1,28 @@
+.wrap {
+  background: #ffffffd9;
+  border: 1px solid #d6d3d1;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #e7e5e4;
+  padding: 0.7rem;
+  text-align: left;
+}
+
+.code {
+  display: inline-block;
+  background: #155e75;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 8px;
+  min-width: 2rem;
+  text-align: center;
+}

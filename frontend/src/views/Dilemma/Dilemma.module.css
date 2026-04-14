@@ -1,0 +1,50 @@
+.page {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.story {
+  max-width: 75ch;
+}
+
+.toggleBox {
+  background: #fff;
+  border: 1px solid #d6d3d1;
+  border-radius: 14px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.toggle {
+  width: fit-content;
+  border: 1px solid #0f766e;
+  color: #0f766e;
+  background: #f0fdfa;
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  font-weight: 700;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #ddd6fe;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.nextButton {
+  justify-self: start;
+  border: none;
+  color: white;
+  background: #ea580c;
+  border-radius: 10px;
+  padding: 0.7rem 1.1rem;
+  font-weight: 700;
+}
