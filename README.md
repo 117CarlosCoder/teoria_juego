@@ -9,6 +9,7 @@ Incluye:
 - Motor de decisiones puro en JavaScript para los agentes
 - Simulaciones round-robin tipo Axelrod
 - Guardado de partidas y detalle ronda por ronda
+- Modulo multijugador aislado en tiempo real (Socket.IO) ejecutado en puertos separados
 
 ## Stack
 
@@ -36,6 +37,9 @@ npm run dev
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3001
 - Health: http://localhost:3001/api/health
+- Multiplayer Frontend (separado): http://localhost:5174
+- Multiplayer Backend (separado): http://localhost:3002
+- Multiplayer Health: http://localhost:3002/health
 
 ## Scripts
 
@@ -47,7 +51,103 @@ npm run backend
 npm run frontend
 npm run dev
 npm run build
+npm run mp:backend
+npm run mp:frontend
+npm run mp:dev
+npm run mp:build
 ```
+
+## Modulo multijugador separado
+
+Para no afectar el sistema existente, el modo multijugador corre como dos apps nuevas e independientes:
+
+- `multiplayer-backend/` (Express + Socket.IO, puerto `3002`)
+- `multiplayer-frontend/` (React + Vite, puerto `5174`)
+
+Ejecucion:
+
+```powershell
+npm --prefix multiplayer-backend install
+npm --prefix multiplayer-frontend install
+npm run mp:dev
+```
+
+La app original (`npm run dev`) permanece intacta y no depende del modulo multijugador.
+
+### Acceso desde otros dispositivos (multijugador)
+
+1. Levantar multijugador:
+
+```powershell
+npm run mp:dev
+```
+
+2. Obtener IP local del host (Windows):
+
+```powershell
+ipconfig
+```
+
+3. Abrir desde otro dispositivo en la misma red:
+
+- Frontend multiplayer: `http://TU_IP_LOCAL:5174`
+
+Notas:
+
+- El frontend multiplayer ya se levanta con `--host 0.0.0.0`.
+- Si restringes CORS en backend multiplayer, define `MP_ALLOWED_ORIGINS`.
+
+### Exponer por internet con ngrok (opcional)
+
+Necesitas dos tuneles (frontend y backend):
+
+```powershell
+ngrok http 5174
+ngrok http 3002
+```
+
+Luego configura en `multiplayer-frontend/.env`:
+
+```env
+VITE_MP_API_URL=https://TU_BACKEND_NGROK
+VITE_MP_WS_URL=https://TU_BACKEND_NGROK
+```
+
+Y en `multiplayer-backend/.env`:
+
+```env
+MP_ALLOWED_ORIGINS=https://TU_FRONTEND_NGROK
+```
+
+Reinicia `npm run mp:dev` despues de cambiar env vars.
+
+### Exponer multijugador con Cloudflare (recomendado)
+
+Para evitar problemas de CORS y sockets entre dominios, usa modo URL unica:
+
+1. Build del frontend multiplayer:
+
+```powershell
+npm run mp:build
+```
+
+2. Levantar backend multiplayer sirviendo frontend + API + Socket.IO en un solo puerto:
+
+```powershell
+Set-Location multiplayer-backend
+$env:MP_PORT="3102"
+$env:MP_SERVE_STATIC="true"
+$env:MP_ALLOWED_ORIGINS="*"
+npm start
+```
+
+3. Publicar ese puerto con Cloudflare Tunnel:
+
+```powershell
+cloudflared tunnel --url http://localhost:3102 --no-autoupdate
+```
+
+Comparte la URL `https://...trycloudflare.com` y los usuarios podran jugar multijugador desde internet.
 
 ## Estructura del proyecto
 

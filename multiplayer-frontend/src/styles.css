@@ -1,0 +1,965 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  font-family: 'Press Start 2P', monospace;
+  color: #111827;
+  background: #9ceef6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(90deg, #9ceef6 0 49.3%, #e9addd 50.7% 100%);
+}
+
+.layout {
+  min-height: 100vh;
+  position: relative;
+}
+
+.layout::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.12) 0,
+    rgba(0, 0, 0, 0.12) 2px,
+    rgba(255, 255, 255, 0) 2px,
+    rgba(255, 255, 255, 0) 4px
+  );
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1rem 1rem 0.4rem;
+  position: relative;
+  z-index: 2;
+  animation: panelDrop 360ms steps(10, end);
+}
+
+.brand {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #111827;
+  text-shadow: 2px 2px 0 #ffffff;
+}
+
+.pillNav {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pill {
+  color: #111827;
+  background: #fffdf5;
+  border: 3px solid #000000;
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 #000000;
+  padding: 0.55rem 0.9rem;
+  font-weight: 600;
+  font-size: 0.55rem;
+}
+
+.pill.active {
+  color: #ffffff;
+  background: #1f6f68;
+  border-color: #000000;
+}
+
+.page {
+  width: min(1120px, 96%);
+  margin: 0 auto;
+  padding: 0.4rem 1rem 2.3rem;
+  display: grid;
+  gap: 0.95rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hero {
+  border: 4px solid #000000;
+  border-radius: 8px;
+  padding: 0.85rem;
+  background: rgba(255, 253, 245, 0.9);
+  box-shadow: 4px 4px 0 #000000;
+  display: grid;
+  gap: 0.42rem;
+  text-align: center;
+  animation: panelDrop 400ms steps(12, end);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 1rem;
+  color: #111827;
+  letter-spacing: 1px;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 0.58rem;
+  color: #315f5a;
+}
+
+.heroKicker {
+  color: #9a5b12;
+  animation: pulseKicker 1.4s steps(2, end) infinite;
+}
+
+.statusBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  animation: panelDrop 430ms steps(10, end);
+}
+
+.statusPill {
+  margin: 0;
+  padding: 0.58rem 0.74rem;
+  background: #fffdf5;
+  border: 3px solid #000000;
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 #000000;
+  font-size: 0.52rem;
+  animation: pulseInfo 1.6s steps(2, end) infinite;
+}
+
+.arenaPreview {
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 300px) 1fr;
+  gap: 0.7rem;
+  align-items: stretch;
+  animation: panelDrop 450ms steps(10, end);
+}
+
+.resolvingArena .decisionBoard {
+  animation: resolveShake 220ms steps(2, end) 1;
+}
+
+.resolvingArena .actionSign {
+  animation: signBlink 260ms steps(2, end) infinite;
+}
+
+.humanoidCard {
+  border: 4px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+  padding: 0.62rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.playerTone {
+  background: linear-gradient(180deg, #dff9f4 0%, #f5fffc 100%);
+}
+
+.agentTone {
+  background: linear-gradient(180deg, #ffe9dc 0%, #fff5ee 100%);
+}
+
+.spriteHeader {
+  width: 100%;
+  display: grid;
+  gap: 0.22rem;
+  justify-items: center;
+}
+
+.spriteHeader p {
+  margin: 0;
+  font-size: 0.46rem;
+}
+
+.spriteHeader strong {
+  font-size: 0.54rem;
+  text-align: center;
+}
+
+.actorScene {
+  position: relative;
+  min-height: 248px;
+}
+
+.sceneLeft {
+  justify-self: end;
+  width: 172px;
+}
+
+.sceneRight {
+  justify-self: start;
+  width: 172px;
+}
+
+.sceneTopScore {
+  position: absolute;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.5rem;
+  color: #f8fafc;
+  text-shadow: 2px 2px 0 #000000;
+}
+
+.sceneLeft .sceneTopScore {
+  left: 0;
+}
+
+.sceneRight .sceneTopScore {
+  right: 0;
+}
+
+.humanoid {
+  position: absolute;
+  bottom: 20px;
+  width: 122px;
+  height: 200px;
+}
+
+.sceneLeft .humanoid {
+  left: 18px;
+}
+
+.sceneRight .humanoid {
+  right: 18px;
+}
+
+.hHead,
+.hTorso,
+.hArmUp,
+.hArmDown,
+.hLegLeft,
+.hLegRight {
+  position: absolute;
+  background: #f9f7e9;
+  border: 4px solid #4b5563;
+}
+
+.hHead {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  left: 33px;
+  top: 0;
+}
+
+.hHead::before,
+.hHead::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4b5563;
+}
+
+.hHead::before {
+  left: 12px;
+}
+
+.hHead::after {
+  right: 12px;
+}
+
+.hTorso {
+  width: 48px;
+  height: 84px;
+  left: 37px;
+  top: 52px;
+  border-radius: 10px;
+}
+
+.hArmUp,
+.hArmDown {
+  width: 64px;
+  height: 14px;
+  border-radius: 8px;
+}
+
+.hArmUp {
+  top: 54px;
+  left: 83px;
+  transform-origin: left top;
+  transition: transform 220ms ease;
+}
+
+.hArmDown {
+  top: 54px;
+  left: -26px;
+  transform-origin: right top;
+  transition: transform 220ms ease;
+}
+
+.hLegLeft,
+.hLegRight {
+  width: 18px;
+  height: 66px;
+  top: 132px;
+  border-radius: 8px;
+}
+
+.hLegLeft {
+  left: 37px;
+}
+
+.hLegRight {
+  right: 37px;
+}
+
+.hLegLeft::after,
+.hLegRight::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  bottom: -10px;
+  width: 34px;
+  height: 8px;
+  border-radius: 8px;
+  background: rgba(79, 70, 229, 0.22);
+}
+
+.handMountUp,
+.handMountDown {
+  position: absolute;
+  width: 64px;
+  height: 14px;
+  top: 54px;
+  transition: transform 220ms ease;
+}
+
+.handMountUp {
+  left: 83px;
+  transform-origin: left top;
+}
+
+.handMountDown {
+  left: -26px;
+  transform-origin: right top;
+}
+
+.handTipUp,
+.handTipDown {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #4b5563;
+}
+
+.handTipUp {
+  right: -2px;
+  top: 4px;
+}
+
+.handTipDown {
+  left: -2px;
+  top: 4px;
+}
+
+.signPoleTop,
+.signPoleBottom {
+  position: absolute;
+  width: 4px;
+  height: 30px;
+  left: 2px;
+  background: #111827;
+}
+
+.signPoleTop {
+  bottom: 6px;
+}
+
+.signPoleBottom {
+  top: 6px;
+}
+
+.actionSign {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 4px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 900;
+  position: absolute;
+  z-index: 3;
+}
+
+.signTop {
+  left: -16px;
+  bottom: 30px;
+}
+
+.signBottom {
+  left: -16px;
+  top: 30px;
+  transform: rotate(180deg);
+}
+
+.signCooperate {
+  background: #4ade80;
+  color: #0f3d1d;
+}
+
+.signDefect {
+  background: #f87171;
+  color: #4f1313;
+}
+
+.signIdle {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.sceneDefect .hArmUp {
+  transform: rotate(8deg) translateX(2px);
+}
+
+.sceneDefect .hArmDown {
+  transform: rotate(-18deg) translateX(-2px);
+}
+
+.sceneCooperate .hArmUp {
+  transform: rotate(-18deg) translateX(2px);
+}
+
+.sceneCooperate .hArmDown {
+  transform: rotate(8deg) translateX(-2px);
+}
+
+.sceneDefect .handMountUp {
+  transform: rotate(8deg) translateX(2px);
+}
+
+.sceneDefect .handMountDown {
+  transform: rotate(-18deg) translateX(-2px);
+}
+
+.sceneCooperate .handMountUp {
+  transform: rotate(-18deg) translateX(2px);
+}
+
+.sceneCooperate .handMountDown {
+  transform: rotate(8deg) translateX(-2px);
+}
+
+.coinTiny {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.decisionBoard {
+  background: #facc15;
+  border: 4px solid #000000;
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 #000000;
+  width: min(300px, 100%);
+  padding: 0.8rem;
+  position: relative;
+  min-height: 360px;
+  justify-self: center;
+}
+
+.boardLegend {
+  margin: 0 0 0.5rem;
+  font-size: 0.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #5d420f;
+  text-align: center;
+}
+
+.matrixDiamond {
+  margin: 1rem auto 0.2rem;
+  width: 220px;
+  height: 220px;
+  position: relative;
+}
+
+.outcomeDiamond {
+  position: absolute;
+  width: 42%;
+  height: 42%;
+  border: 3px solid #000000;
+  border-radius: 6px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+.outcomeCC {
+  left: 50%;
+  top: 22%;
+}
+
+.outcomeTC {
+  left: 22%;
+  top: 50%;
+}
+
+.outcomeCT {
+  left: 78%;
+  top: 50%;
+}
+
+.outcomeTT {
+  left: 50%;
+  top: 78%;
+}
+
+.outcomeTopHalf,
+.outcomeBottomHalf {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.outcomeTopHalf {
+  background: #56c0f2;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.outcomeBottomHalf {
+  background: #d946a8;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.outcomeDiamond strong {
+  transform: rotate(-45deg);
+  position: relative;
+  z-index: 2;
+  font-size: 0.8rem;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #000000;
+}
+
+.outcomeActive {
+  box-shadow: 4px 4px 0 #000000, 0 0 0 5px rgba(250, 250, 140, 0.7);
+  animation: pulse 0.45s ease-in-out;
+}
+
+.outcomeActive .outcomeTopHalf,
+.outcomeActive .outcomeBottomHalf {
+  filter: saturate(1.35) brightness(1.2);
+}
+
+.lightTopLeft,
+.lightTopRight,
+.lightMidLeft,
+.lightMidRight {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2px solid #000000;
+}
+
+.lightTopLeft {
+  left: 78px;
+  top: 66px;
+  background: #84cc16;
+}
+
+.lightTopRight {
+  right: 78px;
+  top: 66px;
+  background: #65e426;
+}
+
+.lightMidLeft {
+  left: 40px;
+  top: 133px;
+  background: #f87171;
+}
+
+.lightMidRight {
+  right: 40px;
+  top: 133px;
+  background: #b91c1c;
+}
+
+.arenaCenterPanel {
+  border: 4px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+  background: repeating-linear-gradient(90deg, #ffd000 0, #ffd000 20px, #f6e374 20px, #f6e374 24px);
+  padding: 0.65rem;
+  display: grid;
+  align-content: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.arenaCenterPanel p {
+  margin: 0;
+  font-size: 0.46rem;
+}
+
+.arenaLegend {
+  font-size: 0.52rem !important;
+  color: #78350f;
+}
+
+.panel {
+  background: rgba(255, 253, 245, 0.92);
+  border: 4px solid #000000;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 4px 4px 0 #000000;
+  display: grid;
+  gap: 0.78rem;
+  animation: panelDrop 470ms steps(10, end);
+}
+
+.lockedLabel {
+  margin: 0;
+  color: #7f1d1d;
+  background: #fef2f2;
+  border: 3px solid #991b1b;
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  justify-self: center;
+  animation: resultFlicker 0.45s steps(2, end) infinite;
+}
+
+.panelFinalResult {
+  gap: 0.6rem;
+}
+
+.resultSummary {
+  margin: 0;
+  font-size: 0.58rem;
+  color: #0f7a2f;
+}
+
+.resultHint {
+  margin: 0;
+  font-size: 0.48rem;
+  color: #304c72;
+}
+
+.chartWrap {
+  background: #fffdf5;
+  border: 4px solid #000000;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 2px #d7d5c8;
+  padding: 0.8rem;
+  animation: panelDrop 640ms steps(10, end);
+}
+
+.panel h2,
+.panel h3 {
+  color: #111827;
+  margin: 0;
+  font-size: 0.72rem;
+}
+
+.panel h3 {
+  margin-top: 0.4rem;
+  font-size: 0.62rem;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.7rem;
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+  color: #1f2937;
+  font-size: 0.52rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.65rem 0.72rem;
+  border-radius: 0;
+  border: 3px solid #000000;
+  background: #fffdf5;
+  font-family: inherit;
+  font-size: 0.53rem;
+  color: #0f172a;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.55);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.62rem;
+}
+
+button {
+  border: 3px solid #000000;
+  border-radius: 0;
+  box-shadow: 0 4px 0 #000000;
+  background: #1f6f68;
+  color: #ffffff;
+  font-weight: 800;
+  font-family: inherit;
+  font-size: 0.56rem;
+  letter-spacing: 0.4px;
+  padding: 0.72rem 0.92rem;
+  cursor: pointer;
+  transition: transform 90ms steps(2, end), box-shadow 90ms steps(2, end), filter 120ms;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+button:hover:not([disabled]) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+button:active:not([disabled]) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #000000;
+}
+
+.cooperateBtn {
+  background: linear-gradient(180deg, #6cff72 0%, #2f9b63 100%);
+  color: #153516;
+  animation: buttonPulseGreen 1.8s steps(8, end) infinite;
+}
+
+.defectBtn {
+  background: linear-gradient(180deg, #ff9d8d 0%, #ce5547 100%);
+  color: #5b1b13;
+  animation: buttonPulseRed 1.8s steps(8, end) infinite;
+}
+
+.roomStateLine,
+.currentAction {
+  margin: 0;
+  font-size: 0.52rem;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding-left: 0;
+}
+
+.roomList,
+.playersList,
+.rankingList {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.roomList li,
+.playersList li,
+.rankingList li {
+  border: 3px solid #000000;
+  background: #fffdf5;
+  box-shadow: 3px 3px 0 #000000;
+  padding: 0.56rem;
+  font-size: 0.5rem;
+  display: grid;
+  gap: 0.32rem;
+}
+
+.rankingList {
+  counter-reset: rank;
+}
+
+.rankingList li {
+  counter-increment: rank;
+}
+
+.rankingList li::before {
+  content: '#' counter(rank);
+  color: #1f6f68;
+}
+
+.info {
+  background: #fff7d6;
+  border: 3px solid #000000;
+  box-shadow: 3px 3px 0 #000000;
+  border-radius: 0;
+  font-size: 0.52rem;
+  padding: 0.62rem;
+}
+
+@keyframes pulseKicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes panelDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spriteFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes buttonPulseGreen {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+}
+
+@keyframes buttonPulseRed {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+}
+
+@keyframes pulseInfo {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes resolveShake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-1px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes signBlink {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes resultFlicker {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  33% {
+    transform: translateX(1px);
+  }
+  66% {
+    transform: translateX(-1px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    font-size: 0.78rem;
+  }
+
+  .arenaPreview {
+    grid-template-columns: 1fr;
+  }
+
+  .decisionBoard {
+    min-height: 320px;
+  }
+
+  .matrixDiamond {
+    width: min(70vw, 210px);
+    height: min(70vw, 210px);
+  }
+
+  .panel h2 {
+    font-size: 0.6rem;
+  }
+
+  .statusPill,
+  label,
+  input,
+  .roomStateLine,
+  .currentAction,
+  .roomList li,
+  .playersList li,
+  .rankingList li,
+  .info,
+  button {
+    font-size: 0.48rem;
+  }
+}

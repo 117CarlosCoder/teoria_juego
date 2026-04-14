@@ -10,7 +10,13 @@
     "backend": "npm --prefix backend start",
     "frontend": "npm --prefix frontend run dev",
     "dev": "concurrently -n BACKEND,FRONTEND -c blue,green \"npm run backend\" \"npm run frontend\"",
-    "build": "npm --prefix frontend run build"
+    "build": "npm --prefix frontend run build",
+    "mp:backend": "npm --prefix multiplayer-backend run dev",
+    "mp:frontend": "npm --prefix multiplayer-frontend run dev",
+    "mp:dev": "concurrently -n MP-BACKEND,MP-FRONTEND -c magenta,cyan \"npm run mp:backend\" \"npm run mp:frontend\"",
+    "mp:build": "npm --prefix multiplayer-frontend run build",
+    "mp:serve": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -LocalPort 3102 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }; Set-Location multiplayer-backend; $env:MP_PORT='3102'; $env:MP_SERVE_STATIC='true'; $env:MP_ALLOWED_ORIGINS='*'; npm start\"",
+    "mp:tunnel": "powershell -NoProfile -Command \"& 'C:\\Program Files (x86)\\cloudflared\\cloudflared.exe' tunnel --url http://localhost:3102 --no-autoupdate\""
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

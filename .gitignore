@@ -2,6 +2,8 @@
 node_modules/
 backend/node_modules/
 frontend/node_modules/
+multiplayer-backend/node_modules/
+multiplayer-frontend/node_modules/
 
 # Build artifacts
 frontend/dist/
@@ -14,10 +16,16 @@ coverage/
 !.env.example
 backend/.env
 frontend/.env
+multiplayer-backend/.env
+multiplayer-frontend/.env
 frontend/.env.*
 backend/.env.*
+multiplayer-backend/.env.*
+multiplayer-frontend/.env.*
 !backend/.env.example
 !frontend/.env.example
+!multiplayer-backend/.env.example
+!multiplayer-frontend/.env.example
 
 # Logs
 npm-debug.log*

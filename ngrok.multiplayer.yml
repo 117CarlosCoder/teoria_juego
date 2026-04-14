@@ -1,0 +1,5 @@
+version: "2"
+tunnels:
+  multiplayer-frontend:
+    proto: http
+    addr: 5174
