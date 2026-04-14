@@ -1,123 +1,611 @@
 .page {
+  --pixel-border: #1e5f59;
+  --pixel-yellow: #f1c357;
+  --pixel-cyan: #d9f3ee;
+  --pixel-pink: #ffe2cf;
+  --pixel-green: #2f9b63;
+  --pixel-red: #ce5547;
+  --pixel-paper: #fffdf5;
+  --pixel-blue: #1f6f68;
+  --pixel-shadow: #2e4f4b;
+  font-family: 'Courier New', 'Consolas', monospace;
   display: grid;
   gap: 1rem;
+  padding: 1.1rem;
+  border: 4px solid var(--pixel-border);
+  box-shadow: 0 8px 0 var(--pixel-shadow);
+  background:
+    linear-gradient(120deg, #f7f4ed 0%, var(--pixel-cyan) 47%, var(--pixel-pink) 100%);
+  position: relative;
+  overflow: hidden;
+  animation: pageReveal 320ms steps(8, end);
 }
 
-.formCard {
-  max-width: 520px;
-  background: #ffffff;
-  border: 1px solid #d6d3d1;
-  border-radius: 14px;
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.2;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.12) 0,
+    rgba(0, 0, 0, 0.12) 2px,
+    rgba(255, 255, 255, 0) 2px,
+    rgba(255, 255, 255, 0) 4px
+  );
+}
+
+.hero {
+  text-align: center;
+  background: rgba(255, 253, 245, 0.9);
+  border: 3px solid var(--pixel-border);
+  box-shadow: 0 5px 0 rgba(30, 95, 89, 0.55);
+  padding: 0.65rem;
+  display: grid;
+  gap: 0.3rem;
+  animation: panelDrop 360ms steps(10, end);
+}
+
+.coin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  color: #9a5b12;
+  margin: 0;
+  animation: coinBlink 1.4s steps(2, end) infinite;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: #111827;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  margin: 0;
+  color: #315f5a;
+  font-size: 0.92rem;
+}
+
+.gameArena {
+  display: grid;
+  gap: 0.8rem;
+  align-items: center;
+  grid-template-columns: 1fr minmax(260px, 360px) 1fr;
+  animation: panelDrop 420ms steps(12, end);
+}
+
+.actorCard {
+  border: 3px solid var(--pixel-border);
+  background: rgba(255, 253, 245, 0.95);
+  box-shadow: 0 5px 0 rgba(30, 95, 89, 0.55);
+  padding: 0.85rem;
+  min-height: 132px;
+  display: grid;
+  align-content: center;
+  gap: 0.25rem;
+  animation: actorRise 420ms steps(10, end);
+}
+
+.actorHead {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.actorMeta {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.actorSprite {
+  width: 56px;
+  height: 56px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 2px solid var(--pixel-border);
+  background: #fff;
+  flex: 0 0 auto;
+  animation: spriteFloat 2.2s steps(6, end) infinite;
+}
+
+.actorCard h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+}
+
+.actorBadge {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.actorScore {
+  margin: 0;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.coinSprite {
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex: 0 0 auto;
+}
+
+.playerSide {
+  background: linear-gradient(180deg, #dff9f4 0%, #f5fffc 100%);
+}
+
+.agentSide {
+  background: linear-gradient(180deg, #ffe9dc 0%, #fff5ee 100%);
+}
+
+.decisionBoard {
+  background: var(--pixel-yellow);
+  border: 4px solid var(--pixel-border);
+  box-shadow: 0 7px 0 #9a7324;
+  padding: 0.65rem;
+}
+
+.boardLegend {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #5d420f;
+}
+
+.matrixGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.42rem;
+}
+
+.cell {
+  border: 2px solid #876527;
+  background: #fff6d6;
+  padding: 0.35rem;
+  display: grid;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+.cellAction {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cell strong {
+  font-size: 1rem;
+}
+
+.controlDeck {
+  border: 4px solid var(--pixel-border);
+  box-shadow: 0 7px 0 #224844;
+  background: var(--pixel-blue);
+  color: #ffffff;
   padding: 1rem;
   display: grid;
+  gap: 0.95rem;
+  animation: panelDrop 470ms steps(12, end);
+}
+
+.controlDeck label {
+  display: grid;
+  gap: 0.3rem;
+  font-weight: 700;
+}
+
+.controlRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.8rem;
 }
 
-.formCard label {
+.controlDeck input,
+.controlDeck select {
+  padding: 0.56rem;
+  border: 3px solid var(--pixel-border);
+  background: var(--pixel-paper);
+  border-radius: 0;
+  color: #111827;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.roundSelector {
   display: grid;
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 
-.formCard input,
-.formCard select {
-  padding: 0.5rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
+.roundSelector p {
+  margin: 0;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
-.formCard button {
-  border: none;
-  color: white;
-  background: #0f766e;
-  border-radius: 10px;
-  padding: 0.7rem 1.1rem;
-  font-weight: 700;
+.roundButtons {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.roundButton,
+.roundButtonActive,
+.primaryAction,
+.actions button,
+.page > button {
+  border: 3px solid var(--pixel-border);
+  border-radius: 0;
+  box-shadow: 0 4px 0 #214743;
+  color: #ffffff;
+  background: #267a72;
+  padding: 0.78rem 1.05rem;
+  font-weight: 800;
+  font-family: inherit;
+  letter-spacing: 0.7px;
+  cursor: pointer;
+  transition: transform 90ms steps(2, end), box-shadow 90ms steps(2, end), filter 140ms;
+}
+
+.roundButton {
+  background: #1f675f;
+}
+
+.roundButtonActive {
+  background: #efb550;
+  color: #3d2a12;
+}
+
+.primaryAction {
+  background: linear-gradient(180deg, #31a297 0%, #1f6f68 100%);
+}
+
+.primaryAction:hover,
+.roundButton:hover,
+.roundButtonActive:hover,
+.actions button:hover,
+.page > button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.primaryAction:active,
+.roundButton:active,
+.roundButtonActive:active,
+.actions button:active,
+.page > button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #214743;
 }
 
 .checkbox {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.48rem;
+  font-weight: 700;
 }
 
 .progress,
 .score {
-  font-weight: 700;
+  margin: 0;
+  font-weight: 800;
 }
 
 .actions {
   display: flex;
-  gap: 0.8rem;
+  gap: 0.9rem;
   flex-wrap: wrap;
+  animation: panelDrop 500ms steps(10, end);
 }
 
 .actions button {
-  border: none;
-  border-radius: 12px;
-  padding: 0.9rem 1.2rem;
+  min-width: 190px;
   font-size: 1rem;
-  color: white;
-  font-weight: 700;
 }
 
 .cooperate {
-  background: #059669;
+  background: linear-gradient(180deg, #6cff72 0%, var(--pixel-green) 100%);
+  color: #153516;
+  animation: buttonPulseGreen 1.8s steps(8, end) infinite;
 }
 
 .defect {
-  background: #b91c1c;
+  background: linear-gradient(180deg, #ff9d8d 0%, var(--pixel-red) 100%);
+  color: #5b1b13;
+  animation: buttonPulseRed 1.8s steps(8, end) infinite;
+}
+
+.lastRoundPanel {
+  border: 3px solid var(--pixel-border);
+  background: #fff7e4;
+  box-shadow: 0 4px 0 #b9872e;
+  padding: 0.55rem 0.7rem;
+  display: grid;
+  gap: 0.25rem;
+  animation: panelDrop 520ms steps(10, end);
+}
+
+.lastRoundPanel p,
+.lastRoundPanel strong {
+  margin: 0;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: #ffffff;
-  border: 1px solid #d6d3d1;
+  background: var(--pixel-paper);
+  border: 3px solid var(--pixel-border);
+  animation: panelDrop 580ms steps(12, end);
 }
 
 .table th,
 .table td {
-  border-bottom: 1px solid #e7e5e4;
-  padding: 0.5rem;
+  border-bottom: 2px solid #d8cfa7;
+  border-right: 2px solid #d8cfa7;
+  padding: 0.48rem;
   text-align: left;
 }
 
-.win {
-  color: #15803d;
+.actionCell {
+  text-align: center;
+}
+
+.actionSprite {
+  width: 22px;
+  height: 22px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+  animation: actionPulse 1.4s steps(6, end) infinite;
+}
+
+.table th {
+  background: #f4e6c2;
+  color: #1e5f59;
+}
+
+.table tbody tr {
+  animation: rowPop 260ms ease-out both;
+}
+
+.table tbody tr:nth-child(odd) {
+  background: #fffdf5;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #fff8ea;
+}
+
+.table tbody tr:hover {
+  background: #e7f7f3;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.win,
+.lose,
+.draw {
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin: 0;
+  text-transform: uppercase;
+  animation: resultFlicker 1s steps(2, end) infinite;
+}
+
+.win {
+  color: #0f7a2f;
 }
 
 .lose {
-  color: #b91c1c;
-  font-size: 1.2rem;
-  font-weight: 800;
+  color: #b4232f;
 }
 
 .draw {
-  color: #0f766e;
-  font-size: 1.2rem;
-  font-weight: 800;
+  color: #2f4eb8;
 }
 
 .saved {
-  color: #166534;
+  color: #0f7a2f;
+  background: #dfffe2;
+  border: 2px solid #0f7a2f;
+  padding: 0.35rem 0.5rem;
+  margin: 0;
 }
 
 .error {
-  color: #b91c1c;
+  color: #b4232f;
+  background: #ffe3e5;
+  border: 2px solid #b4232f;
+  padding: 0.35rem 0.5rem;
+  margin: 0;
 }
 
 .chartWrap {
-  background: #ffffff;
-  border: 1px solid #d6d3d1;
-  border-radius: 14px;
+  background: var(--pixel-paper);
+  border: 3px solid var(--pixel-border);
+  box-shadow: inset 0 0 0 2px #d7d5c8;
   padding: 0.8rem;
+  animation: panelDrop 640ms steps(10, end);
 }
 
 .analysis {
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  padding: 0.75rem;
+  background: #fff7de;
+  border: 3px solid #b78834;
+  padding: 0.72rem;
+  margin: 0;
+  font-weight: 700;
+  animation: panelDrop 700ms steps(10, end);
+}
+
+@keyframes pageReveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes panelDrop {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes actorRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spriteFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes rowPop {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes actionPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes coinBlink {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 0 transparent;
+  }
+  50% {
+    opacity: 0.72;
+    text-shadow: 0 0 8px rgba(255, 216, 84, 0.8);
+  }
+}
+
+@keyframes buttonPulseGreen {
+  0%,
+  100% {
+    box-shadow: 0 4px 0 #231a42;
+  }
+  50% {
+    box-shadow: 0 4px 0 #231a42, 0 0 0 3px rgba(96, 255, 114, 0.34);
+  }
+}
+
+@keyframes buttonPulseRed {
+  0%,
+  100% {
+    box-shadow: 0 4px 0 #231a42;
+  }
+  50% {
+    box-shadow: 0 4px 0 #231a42, 0 0 0 3px rgba(255, 79, 88, 0.34);
+  }
+}
+
+@keyframes resultFlicker {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  33% {
+    transform: translateX(1px);
+  }
+  66% {
+    transform: translateX(-1px);
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 0.85rem;
+  }
+
+  .title {
+    font-size: 1.15rem;
+  }
+
+  .gameArena {
+    grid-template-columns: 1fr;
+  }
+
+  .controlRow {
+    grid-template-columns: 1fr;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+
+  .actorHead {
+    justify-content: center;
+  }
+
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page,
+  .hero,
+  .gameArena,
+  .controlDeck,
+  .actions,
+  .lastRoundPanel,
+  .table,
+  .chartWrap,
+  .analysis,
+  .actorCard,
+  .actorSprite,
+  .cooperate,
+  .defect,
+  .table tbody tr {
+    animation: none;
+    transition: none;
+  }
 }
