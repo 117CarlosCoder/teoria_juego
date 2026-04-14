@@ -150,6 +150,7 @@ function Game() {
   const { state, dispatch } = useGameState();
   const [strategies, setStrategies] = useState([]);
   const [loadingStrategies, setLoadingStrategies] = useState(true);
+  const [strategiesError, setStrategiesError] = useState('');
   const [saveError, setSaveError] = useState('');
   const [saved, setSaved] = useState(false);
   const [selectedAction, setSelectedAction] = useState('');
@@ -167,11 +168,14 @@ function Game() {
     async function fetchStrategies() {
       try {
         setLoadingStrategies(true);
+        setStrategiesError('');
         const { data } = await api.get('/api/strategies');
         setStrategies(data);
         if (data.length) {
           setForm((current) => ({ ...current, strategyId: String(data[0].id) }));
         }
+      } catch (error) {
+        setStrategiesError('No se pudieron cargar las estrategias. Revisa el backend normal y la base de datos.');
       } finally {
         setLoadingStrategies(false);
       }
@@ -304,6 +308,7 @@ function Game() {
           noiseApplied,
         },
       });
+      setSelectedAction('');
       setIsResolvingRound(false);
       roundTimeoutRef.current = null;
     }, 320);
@@ -335,6 +340,7 @@ function Game() {
           <p className={styles.subtitle}>Dilema del Prisionero - Arcade Pixel</p>
         </header>
         {loadingStrategies && <p>Cargando estrategias...</p>}
+        {strategiesError && <p className={styles.error}>{strategiesError}</p>}
 
         <div className={styles.gameArena}>
           <ActorCard
@@ -409,7 +415,12 @@ function Game() {
             Activar ruido del entorno (10%)
           </label>
 
-          <button className={styles.primaryAction} onClick={startGame} type="button">
+          <button
+            className={styles.primaryAction}
+            onClick={startGame}
+            type="button"
+            disabled={loadingStrategies || !selectedStrategy}
+          >
             INSERT COIN · START
           </button>
         </div>
@@ -427,7 +438,7 @@ function Game() {
           {isResolvingRound && <p className={styles.lockedLabel}>Resolviendo...</p>}
         </header>
 
-        <div className={styles.gameArena}>
+        <div className={`${styles.gameArena} ${isResolvingRound ? styles.resolvingArena : ''}`}>
           <ActorCard
             name={state.playerName}
             score={state.playerScore}
@@ -547,6 +558,12 @@ function Game() {
       <p>
         {state.playerName}: {state.playerScore} - Agente: {state.agentScore}
       </p>
+      <p className={styles[state.result]}>
+        {state.result === 'win' && 'Victoria'}
+        {state.result === 'lose' && 'Derrota'}
+        {state.result === 'draw' && 'Empate'}
+      </p>
+      {saved && <p className={styles.saved}>Partida guardada correctamente.</p>}
       <p>{describeStrategy(state.strategySlug)}</p>
       {saveError && <p className={styles.error}>{saveError}</p>}
 
