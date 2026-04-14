@@ -13,6 +13,7 @@ import api from '../../api';
 import styles from './Game.module.css';
 import { describeStrategy, getAgentActionWithMeta } from './GameEngine';
 import { useGameState } from './useGameState';
+import RoundResultsTraffic from '../../components/RoundResultsTraffic';
 
 const SPRITES = {
   coin: '/sprites/coin-pixel.svg',
@@ -124,17 +125,11 @@ function ActorCard({ name, score, badge, side, actionLabel, secondaryLabel }) {
         </div>
 
         <div className={styles.handMountUp} aria-hidden="true">
-          <div className={styles.handTipUp}>
-            <div className={styles.signPoleTop} />
-            <div className={`${styles.actionSign} ${styles.signTop} ${topSignTone}`}>{topSignLabel}</div>
-          </div>
+          <div className={`${styles.actionSign} ${styles.signTop} ${topSignTone}`}>{topSignLabel}</div>
         </div>
 
         <div className={styles.handMountDown} aria-hidden="true">
-          <div className={styles.handTipDown}>
-            <div className={styles.signPoleBottom} />
-            <div className={`${styles.actionSign} ${styles.signBottom} ${bottomSignTone}`}>{bottomSignLabel}</div>
-          </div>
+          <div className={`${styles.actionSign} ${styles.signBottom} ${bottomSignTone}`}>{bottomSignLabel}</div>
         </div>
       </div>
 
@@ -331,98 +326,88 @@ function Game() {
   if (state.screen === 'config') {
     return (
       <section className={`${styles.page} ${styles.pageConfig}`}>
-        <header className={styles.hero}>
-          <p className={styles.coin}>
-            <img className={styles.coinSprite} src={SPRITES.coin} alt="" aria-hidden="true" />
-            [ 1 moneda ]
-          </p>
-          <h1 className={styles.title}>MODO JUGAR</h1>
-          <p className={styles.subtitle}>Dilema del Prisionero - Arcade Pixel</p>
-        </header>
-        {loadingStrategies && <p>Cargando estrategias...</p>}
-        {strategiesError && <p className={styles.error}>{strategiesError}</p>}
+        <div className={styles.hudPanel}>
+          <div className={styles.controlDeck}>
+            <div className={styles.controlRow}>
+              <label>
+                Nombre del jugador
+                <input
+                  value={form.playerName}
+                  onChange={(event) => setForm((prev) => ({ ...prev, playerName: event.target.value }))}
+                  placeholder="Alias del jugador"
+                />
+              </label>
 
-        <div className={styles.gameArena}>
-          <ActorCard
-            name={form.playerName || 'Jugador'}
-            score={0}
-            badge="TU"
-            side="player"
-            actionLabel={playerActionLabel}
-            secondaryLabel={playerAlternativeLabel}
-          />
-          <DecisionBoard highlightedCell={highlightedCell} pulseTick={state.currentRound} />
-          <ActorCard
-            name={selectedStrategy ? selectedStrategy.name : 'Agente'}
-            score={0}
-            badge="CPU"
-            side="agent"
-            actionLabel={agentActionLabel}
-            secondaryLabel={agentAlternativeLabel}
-          />
+              <label>
+                Estrategia rival
+                <select
+                  value={form.strategyId}
+                  onChange={(event) => setForm((prev) => ({ ...prev, strategyId: event.target.value }))}
+                >
+                  {strategies.map((strategy) => (
+                    <option key={strategy.id} value={strategy.id}>
+                      {strategy.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className={styles.roundSelector}>
+              <p>Duracion de partida</p>
+              <div className={styles.roundButtons}>
+                {[5, 10, 20].map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={value === form.totalRounds ? styles.roundButtonActive : styles.roundButton}
+                    onClick={() => setForm((prev) => ({ ...prev, totalRounds: value }))}
+                  >
+                    {value} R
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <label className={styles.checkbox}>
+              <input
+                type="checkbox"
+                checked={form.noiseEnabled}
+                onChange={(event) =>
+                  setForm((prev) => ({ ...prev, noiseEnabled: event.target.checked }))
+                }
+              />
+              Activar ruido del entorno (10%)
+            </label>
+
+            <button className={styles.primaryAction} onClick={startGame} type="button">
+              INSERT COIN · START
+            </button>
+          </div>
         </div>
 
-        <div className={styles.controlDeck}>
-          <div className={styles.controlRow}>
-            <label>
-              Nombre del jugador
-              <input
-                value={form.playerName}
-                onChange={(event) => setForm((prev) => ({ ...prev, playerName: event.target.value }))}
-                placeholder="Alias del jugador"
-              />
-            </label>
+        {loadingStrategies && <p>Cargando estrategias...</p>}
 
-            <label>
-              Estrategia rival
-              <select
-                value={form.strategyId}
-                onChange={(event) => setForm((prev) => ({ ...prev, strategyId: event.target.value }))}
-              >
-                {strategies.map((strategy) => (
-                  <option key={strategy.id} value={strategy.id}>
-                    {strategy.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          <div className={styles.roundSelector}>
-            <p>Duracion de partida</p>
-            <div className={styles.roundButtons}>
-              {[5, 10, 20].map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  className={value === form.totalRounds ? styles.roundButtonActive : styles.roundButton}
-                  onClick={() => setForm((prev) => ({ ...prev, totalRounds: value }))}
-                >
-                  {value} R
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <label className={styles.checkbox}>
-            <input
-              type="checkbox"
-              checked={form.noiseEnabled}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, noiseEnabled: event.target.checked }))
-              }
+        <div className={styles.gameFrame}>
+          <div className={styles.gameArena}>
+            <ActorCard
+              name={form.playerName || 'Jugador'}
+              score={0}
+              badge="TU"
+              side="player"
+              actionLabel={playerActionLabel}
+              secondaryLabel={playerAlternativeLabel}
             />
-            Activar ruido del entorno (10%)
-          </label>
-
-          <button
-            className={styles.primaryAction}
-            onClick={startGame}
-            type="button"
-            disabled={loadingStrategies || !selectedStrategy}
-          >
-            INSERT COIN · START
-          </button>
+            <DecisionBoard highlightedCell={highlightedCell} pulseTick={state.currentRound} />
+            <ActorCard
+              name={selectedStrategy ? selectedStrategy.name : 'Agente'}
+              score={0}
+              badge="CPU"
+              side="agent"
+              actionLabel={agentActionLabel}
+              secondaryLabel={agentAlternativeLabel}
+            />
+          </div>
         </div>
       </section>
     );
@@ -431,14 +416,80 @@ function Game() {
   if (state.screen === 'playing') {
     return (
       <section className={`${styles.page} ${styles.pagePlaying}`}>
-        <header className={styles.hero}>
-          <h1 className={styles.title}>PARTIDA EN CURSO</h1>
-          <p className={styles.progress}>Ronda {state.currentRound + 1} de {state.totalRounds}</p>
-          <p className={styles.score}>Tu: {state.playerScore} - Agente: {state.agentScore}</p>
-          {isResolvingRound && <p className={styles.lockedLabel}>Resolviendo...</p>}
-        </header>
+        <div className={styles.hudPanel}>
+          <header className={styles.hero}>
+            <h1 className={styles.title}>PARTIDA EN CURSO</h1>
+            <p className={styles.progress}>Ronda {state.currentRound + 1} de {state.totalRounds}</p>
+          </header>
 
-        <div className={`${styles.gameArena} ${isResolvingRound ? styles.resolvingArena : ''}`}>
+          {lastRound && (
+            <div className={styles.lastRoundPanel}>
+              <p>Ultima ronda</p>
+              <strong>
+                Tu: {lastRound.player_action === 'cooperate' ? 'C' : 'T'} | CPU:{' '}
+                {lastRound.agent_action === 'cooperate' ? 'C' : 'T'} | Pago:{' '}
+                {lastRound.player_payoff}-{lastRound.agent_payoff}
+              </strong>
+            </div>
+          )}
+
+          <div className={styles.actions}>
+            <button
+              className={`${styles.cooperate} ${selectedAction === 'cooperate' ? styles.selectedCooperate : ''} ${isResolvingRound ? styles.lockedAction : ''}`}
+              onClick={() => playRound('cooperate')}
+              type="button"
+              aria-pressed={selectedAction === 'cooperate'}
+              disabled={isResolvingRound}
+            >
+              C · COOPERAR
+            </button>
+            <button
+              className={`${styles.defect} ${selectedAction === 'defect' ? styles.selectedDefect : ''} ${isResolvingRound ? styles.lockedAction : ''}`}
+              onClick={() => playRound('defect')}
+              type="button"
+              aria-pressed={selectedAction === 'defect'}
+              disabled={isResolvingRound}
+            >
+              T · TRAICIONAR
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.gameFrame}>
+          <div className={styles.gameArena}>
+            <ActorCard
+              name={state.playerName}
+              score={state.playerScore}
+              badge="TU"
+              side="player"
+              actionLabel={playerActionLabel}
+              secondaryLabel={playerAlternativeLabel}
+            />
+            <DecisionBoard highlightedCell={highlightedCell} pulseTick={state.currentRound} />
+            <ActorCard
+              name={startedStrategy ? startedStrategy.name : 'Agente'}
+              score={state.agentScore}
+              badge="CPU"
+              side="agent"
+              actionLabel={agentActionLabel}
+              secondaryLabel={agentAlternativeLabel}
+            />
+          </div>
+        </div>
+
+        <RoundResultsTraffic history={state.history} />
+      </section>
+    );
+  }
+
+  return (
+    <section className={`${styles.page} ${styles.pageResult}`}>
+      <header className={styles.hero}>
+        <h1 className={styles.title}>RESULTADO FINAL</h1>
+      </header>
+
+      <div className={styles.gameFrame}>
+        <div className={styles.gameArena}>
           <ActorCard
             name={state.playerName}
             score={state.playerScore}
@@ -457,103 +508,6 @@ function Game() {
             secondaryLabel={agentAlternativeLabel}
           />
         </div>
-
-        {lastRound && (
-          <div className={styles.lastRoundPanel}>
-            <p>Ultima ronda</p>
-            <strong>
-              Tu: {lastRound.player_action === 'cooperate' ? 'C' : 'T'} | CPU:{' '}
-              {lastRound.agent_action === 'cooperate' ? 'C' : 'T'} | Pago:{' '}
-              {lastRound.player_payoff}-{lastRound.agent_payoff}
-            </strong>
-          </div>
-        )}
-
-        <div className={styles.actions}>
-          <button
-            className={`${styles.cooperate} ${selectedAction === 'cooperate' ? styles.selectedCooperate : ''} ${isResolvingRound ? styles.lockedAction : ''}`}
-            onClick={() => playRound('cooperate')}
-            type="button"
-            aria-pressed={selectedAction === 'cooperate'}
-            disabled={isResolvingRound}
-          >
-            C · COOPERAR
-          </button>
-          <button
-            className={`${styles.defect} ${selectedAction === 'defect' ? styles.selectedDefect : ''} ${isResolvingRound ? styles.lockedAction : ''}`}
-            onClick={() => playRound('defect')}
-            type="button"
-            aria-pressed={selectedAction === 'defect'}
-            disabled={isResolvingRound}
-          >
-            T · TRAICIONAR
-          </button>
-        </div>
-
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Ronda</th>
-              <th>Tu accion</th>
-              <th>Agente</th>
-              <th>Pago tuyo</th>
-              <th>Pago agente</th>
-              <th>Ruido</th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.history.map((round) => (
-              <tr key={round.round_num}>
-                <td>{round.round_num}</td>
-                <td className={styles.actionCell}>
-                  <img
-                    className={styles.actionSprite}
-                    src={round.player_action === 'cooperate' ? SPRITES.cooperate : SPRITES.defect}
-                    alt={round.player_action === 'cooperate' ? 'Cooperar' : 'Traicionar'}
-                  />
-                </td>
-                <td className={styles.actionCell}>
-                  <img
-                    className={styles.actionSprite}
-                    src={round.agent_action === 'cooperate' ? SPRITES.cooperate : SPRITES.defect}
-                    alt={round.agent_action === 'cooperate' ? 'Cooperar' : 'Traicionar'}
-                  />
-                </td>
-                <td>{round.player_payoff}</td>
-                <td>{round.agent_payoff}</td>
-                <td>{round.noise_applied ? 'Si' : 'No'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-    );
-  }
-
-  return (
-    <section className={`${styles.page} ${styles.pageResult}`}>
-      <header className={styles.hero}>
-        <h1 className={styles.title}>RESULTADO FINAL</h1>
-      </header>
-
-      <div className={styles.gameArena}>
-        <ActorCard
-          name={state.playerName}
-          score={state.playerScore}
-          badge="TU"
-          side="player"
-          actionLabel={playerActionLabel}
-          secondaryLabel={playerAlternativeLabel}
-        />
-        <DecisionBoard highlightedCell={highlightedCell} pulseTick={state.currentRound} />
-        <ActorCard
-          name={startedStrategy ? startedStrategy.name : 'Agente'}
-          score={state.agentScore}
-          badge="CPU"
-          side="agent"
-          actionLabel={agentActionLabel}
-          secondaryLabel={agentAlternativeLabel}
-        />
       </div>
       <p>
         {state.playerName}: {state.playerScore} - Agente: {state.agentScore}

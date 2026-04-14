@@ -14,17 +14,23 @@
   display: grid;
   gap: 0.9rem;
   padding: 1.1rem;
-  border: 4px solid #000000;
-  border-radius: 8px;
-  box-shadow: 4px 4px 0 #000000;
   min-height: 100vh;
-  background: linear-gradient(90deg, #9ceef6 0 49.3%, #e9addd 50.7% 100%);
+  background: #f6f7fb;
   position: relative;
-  overflow: hidden;
   animation: pageReveal 320ms steps(8, end);
 }
 
-.page::before {
+.gameFrame {
+  border: 4px solid #000000;
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 #000000;
+  background: linear-gradient(90deg, #9ceef6 0 49.3%, #e9addd 50.7% 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 0.4rem;
+}
+
+.gameFrame::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -40,7 +46,7 @@
   );
 }
 
-.page::after {
+.gameFrame::after {
   content: '';
   position: absolute;
   top: 0;
@@ -66,8 +72,15 @@
 }
 
 .pagePlaying {
-  gap: 0.5rem;
+  gap: 0.2rem;
   padding-top: 0.7rem;
+}
+
+.hudPanel {
+  display: grid;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 2;
 }
 
 .pagePlaying .hero {
@@ -305,6 +318,7 @@
   left: -22px;
   bottom: 34px;
   transform: rotate(0deg);
+  transform-origin: center center;
 }
 
 .signCooperate {
@@ -345,49 +359,6 @@
 .handMountDown {
   left: -29px;
   transform-origin: right top;
-}
-
-.handTipUp,
-.handTipDown {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #111827;
-  border: 2px solid #f9f7e9;
-}
-
-.handTipUp {
-  right: -4px;
-  top: 3px;
-}
-
-.handTipDown {
-  left: -4px;
-  top: 3px;
-}
-
-.signPoleTop,
-.signPoleBottom {
-  position: absolute;
-  width: 6px;
-  height: 34px;
-  background: #ffffff;
-  border: 3px solid #4b5563;
-}
-
-.signPoleTop {
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  border-bottom: none;
-}
-
-.signPoleBottom {
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  border-top: none;
 }
 
 .sceneCooperate .handMountUp {
@@ -771,13 +742,19 @@
 }
 
 .lockedLabel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   margin: 0;
   color: #7f1d1d;
   background: #fef2f2;
   border: 3px solid #991b1b;
   border-radius: 8px;
-  padding: 0.35rem 0.55rem;
-  justify-self: center;
+  padding: 1rem 2rem;
+  z-index: 1000;
+  font-size: 1.25rem;
+  font-weight: 600;
   animation: resultFlicker 0.45s steps(2, end) infinite;
 }
 

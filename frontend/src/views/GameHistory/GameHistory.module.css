@@ -1,0 +1,318 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.loadingContainer,
+.errorContainer,
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  border: 3px solid #000000;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  box-shadow: 4px 4px 0 #000000;
+  gap: 1rem;
+}
+
+.loadingText,
+.errorText,
+.emptyText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.loadingText {
+  color: #3b82f6;
+}
+
+.errorText {
+  color: #ef4444;
+}
+
+.emptyText {
+  color: #6b7280;
+}
+
+.emptyContainer p:last-child {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.statCard {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 3px solid #000000;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  box-shadow: 4px 4px 0 #000000;
+  align-items: center;
+}
+
+.statIcon {
+  font-size: 2.5rem;
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: #1e40af;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin: 0;
+}
+
+.gamesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.gameCard {
+  border: 3px solid #000000;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 4px 4px 0 #000000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.gameCard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #000000;
+}
+
+.gameCard.resultwin {
+  border-top: 5px solid #4ade80;
+  background: linear-gradient(to bottom, rgba(74, 222, 128, 0.05), white);
+}
+
+.gameCard.resultlose {
+  border-top: 5px solid #ef4444;
+  background: linear-gradient(to bottom, rgba(239, 68, 68, 0.05), white);
+}
+
+.gameCard.resultdraw {
+  border-top: 5px solid #fbbf24;
+  background: linear-gradient(to bottom, rgba(251, 191, 36, 0.05), white);
+}
+
+.gameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.playerSection {
+  flex: 1;
+}
+
+.playerName {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.strategyName {
+  font-size: 0.85rem;
+  color: #0369a1;
+  font-weight: 600;
+  margin: 0;
+}
+
+.resultSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resultBadge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+.gameBody {
+  padding: 1.25rem;
+  border-bottom: 2px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.miniTraffic {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.miniTrafficLabel {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1f2937;
+  min-width: 30px;
+}
+
+.miniCircles {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.miniCircle {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.miniTrafficLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 2rem;
+  color: #9ca3af;
+  font-weight: 700;
+}
+
+.gameFooter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.25rem;
+  border-bottom: 2px solid #e5e7eb;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+.statBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.statBoxLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.statBoxValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.gameDate {
+  padding: 0.75rem 1.25rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .gamesList {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .gamesList {
+    grid-template-columns: 1fr;
+  }
+
+  .gameFooter {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gameHeader {
+    flex-direction: column;
+  }
+
+  .resultBadge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .playerName {
+    font-size: 1.1rem;
+  }
+
+  .miniCircle {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}

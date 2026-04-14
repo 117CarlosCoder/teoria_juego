@@ -2,8 +2,10 @@ import { NavLink } from 'react-router-dom';
 import styles from './Navbar.module.css';
 
 const links = [
-  { to: '/', label: 'El Dilema' },
-  { to: '/strategies', label: 'Estrategias' },
+  { to: '/', label: 'Inicio' },
+  { to: '/dilemma', label: 'El Dilema' },
+  { to: '/strategies-explained', label: 'Estrategias' },
+  { to: '/history', label: 'Historial' },
   { to: '/tournament', label: 'Torneo' },
   { to: '/game', label: 'Jugar' },
 ];
@@ -11,7 +13,7 @@ const links = [
 function Navbar() {
   return (
     <header className={styles.header}>
-      <div className={styles.brand}>Teoria de Juegos Lab</div>
+      <div className={styles.brand}>Dilema del prisionero</div>
       <nav className={styles.nav}>
         {links.map((link) => (
           <NavLink
