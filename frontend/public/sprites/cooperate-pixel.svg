@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-labelledby="title desc" role="img">
+  <title id="title">Cooperar</title>
+  <desc id="desc">Icono pixel de cooperacion</desc>
+  <rect width="16" height="16" fill="#000000"/>
+  <rect x="1" y="1" width="14" height="14" fill="#dfffe2"/>
+  <rect x="3" y="4" width="4" height="4" fill="#62c86f"/>
+  <rect x="9" y="4" width="4" height="4" fill="#62c86f"/>
+  <rect x="5" y="8" width="6" height="3" fill="#47a457"/>
+  <rect x="6" y="11" width="4" height="2" fill="#3b8647"/>
+  <rect x="4" y="5" width="2" height="2" fill="#95f2a1"/>
+  <rect x="10" y="5" width="2" height="2" fill="#95f2a1"/>
+</svg>
