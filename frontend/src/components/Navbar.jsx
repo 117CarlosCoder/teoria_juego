@@ -11,7 +11,7 @@ const links = [
 function Navbar() {
   return (
     <header className={styles.header}>
-      <div className={styles.brand}>Teoria de Juegos Lab</div>
+      <div className={styles.brand}>Dilema del prisionero</div>
       <nav className={styles.nav}>
         {links.map((link) => (
           <NavLink
